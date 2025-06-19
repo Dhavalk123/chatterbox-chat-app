@@ -25,19 +25,3 @@ It allows users to register, log in, and chat instantly with others in a shared 
 
 ---
 
-## 📸 Screenshots
-
-### 🔐 Login Page
-![Login Page](screenshots/login-page.png)
-
----
-
-### 📝 Register Page
-![Register Page]"C:\Users\dhaval koriya\Pictures\chatter\register-page.png.png"
-
----
-
-### 💬 Chat UI
-![Chat UI](screenshots/chat-ui.png)
-
-
