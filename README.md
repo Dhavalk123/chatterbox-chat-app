@@ -39,4 +39,22 @@ It allows users to register, log in, and chat instantly with others in a shared 
 ---
 
 ## 📁 Folder Structure
+chat-app/
+│
+├── client/                         # Frontend files (HTML, CSS, JS)
+│   ├── index.html                  # Chat page
+│   ├── login.html                  # Login page
+│   ├── register.html               # Register page
+│   └── style.css                   # Styling for all pages
+│
+├── screenshots/                    # (Optional) Screenshots for README
+│   ├── login-page.png
+│   ├── register-page.png
+│   └── chat-ui.png
+│
+├── users.json                      # Stores registered users
+├── index.js                        # Main Node.js server (Express + Socket.IO)
+├── package.json                    # NPM metadata and dependencies
+├── .gitignore                      # To ignore node_modules, etc.
+└── README.md                       # Project description and info
 
