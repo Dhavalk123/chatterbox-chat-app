@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ChatterBox Chat</title>
+
+  <!-- Emoji Button Styles -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.4/dist/index.min.css"
+  />
+
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #e6f7ff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+    }
+
+    .app-title {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #3399ff;
+      margin-bottom: 20px;
+      text-shadow: 1px 1px 3px #ccc;
+    }
+
+    .chat-container {
+      width: 90%;
+      max-width: 500px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 80vh;
+    }
+
+    .messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .message {
+      max-width: 75%;
+      padding: 10px;
+      border-radius: 15px;
+      word-wrap: break-word;
+      font-size: 15px;
+    }
+
+    .mine {
+      align-self: flex-end;
+      background-color: #3399ff;
+      color: white;
+      border-bottom-right-radius: 0;
+    }
+
+    .theirs {
+      align-self: flex-start;
+      background-color: #f0f0f0;
+      color: black;
+      border-bottom-left-radius: 0;
+    }
+
+    .input-area {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-top: 1px solid #ccc;
+      gap: 5px;
+    }
+
+    #messageInput {
+      flex: 1;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #sendBtn, #emojiBtn {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+
+    #sendBtn {
+      background: #3399ff;
+      color: white;
+      font-weight: bold;
+    }
+
+    #sendBtn:hover {
+      background: #007acc;
+    }
+
+    #emojiBtn {
+      background: #eeeeee;
+    }
+
+    #emojiBtn:hover {
+      background: #dddddd;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-title">ChatterBox 💬</div>
+
+  <div class="chat-container">
+    <div class="messages" id="messages"></div>
+    <div class="input-area">
+      <button id="emojiBtn">😊</button>
+      <input type="text" id="messageInput" placeholder="Type a message..." />
+      <button id="sendBtn">Send</button>
+    </div>
+  </div>
+
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@joeattardi/emoji-button@4.6.4/dist/index.min.js"></script>
+
+  <script>
+    const socket = io("http://localhost:3001");
+    const messagesDiv = document.getElementById("messages");
+    const input = document.getElementById("messageInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const emojiBtn = document.getElementById("emojiBtn");
+
+    const username = prompt("Enter your username to join chat");
+
+    sendBtn.addEventListener("click", () => {
+      const text = input.value.trim();
+      if (text !== "") {
+        socket.emit("message", { username, text });
+        input.value = "";
+      }
+    });
+
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        sendBtn.click();
+      }
+    });
+
+    socket.on("message", ({ username: sender, text }) => {
+      const msgElement = document.createElement("div");
+      msgElement.className = "message";
+      msgElement.classList.add(sender === username ? "mine" : "theirs");
+      msgElement.textContent = `${sender}: ${text}`;
+      messagesDiv.appendChild(msgElement);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+
+    // Emoji picker
+    const picker = new EmojiButton();
+    emojiBtn.addEventListener("click", () => {
+      picker.togglePicker(emojiBtn);
+    });
+
+    picker.on("emoji", emoji => {
+      input.value += emoji;
+      input.focus();
+    });
+  </script>
+
+</body>
+</html>
